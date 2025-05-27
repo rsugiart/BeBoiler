@@ -7,8 +7,9 @@ import{createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 // You can import supported modules from npm
 // import { Text, Card } from 'react-native-paper';
 
+
 // or any files within the Snack
-// import ProfileScreen from './ProfileScreen';
+// import ProfileScreen from './screens/ProfileScreen';
 import AssetExample from './components/AssetExample';
 
 
