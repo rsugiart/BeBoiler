@@ -11,6 +11,7 @@ import{createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 // or any files within the Snack
 import ProfileScreen from './screens/ProfileScreen';
 import AssetExample from './components/AssetExample';
+import FeedScreen from './screens/FeedScreen';
 
 
 //placeholder screens!! - CHANGE THESE TO MATCH LINE 12 ONCE YOU ADD YOUR JS FILE
@@ -22,13 +23,15 @@ import AssetExample from './components/AssetExample';
 //     </SafeAreaView>
 //   );
 // }
-function FeedScreen() {
-  return (
-    <SafeAreaView style={styles.center}>
-      <Text>Feed View</Text>
-    </SafeAreaView>
-  );
-}
+
+// function FeedScreen() {
+//   return (
+//     <SafeAreaView style={styles.center}>
+//       <Text>Feed View</Text>
+//     </SafeAreaView>
+//   );
+// }
+
 function TasksScreen() {
   return (
     <SafeAreaView style={styles.center}>
