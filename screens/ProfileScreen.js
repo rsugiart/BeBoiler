@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -6,10 +6,15 @@ import {
   StyleSheet,
   TouchableOpacity,
   FlatList,
+  Button,
+  Alert
 } from 'react-native';
-import { launchImageLibrary } from 'react-native-image-picker';
+// import { launchImageLibrary } from 'react-native-image-picker';
+import * as ImagePicker from 'expo-image-picker';
 
 const PersonalProfile = () => {
+    const [hasGalleryPermission, setHasGalleryPermission] = useState(false);
+
   // Store profile picture in state
   const [profilePic, setProfilePic] = useState(
     'https://example.com/default-profile.png'
@@ -22,6 +27,19 @@ const PersonalProfile = () => {
     eventsAttended: 8,
     dailyStreak: 5,
   };
+
+  useEffect(() =>{
+    (async () => {
+        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        setHasGalleryPermission(status === 'granted');
+        if (status !== 'granted') {
+        Alert.alert(
+            'Permission required',
+            'We need access to your photos to set a profile picture.'
+        );
+        }
+    })();
+    }, [] );
 
   // Sample posts (could be fetched from an API)
   const userPosts = [
@@ -38,29 +56,26 @@ const PersonalProfile = () => {
     },
   ];
 
-  // Function to handle picking an image from the library
-  const pickImageFromLibrary = async () => {
-    // Options for the image picker
-    const options = {
-      mediaType: 'photo',
-      maxWidth: 1024,
-      maxHeight: 1024,
-      quality: 1,
-    };
-
-    // Launch image library
-    launchImageLibrary(options, (response) => {
-      if (response.didCancel) {
-        console.log('User canceled image picker');
-      } else if (response.errorCode) {
-        console.log('ImagePicker Error: ', response.errorMessage);
-      } else if (response.assets && response.assets.length > 0) {
-        // Get the selected image's URI
-        const selectedImage = response.assets[0].uri;
-        setProfilePic(selectedImage);
-      }
-    });
-  };
+     // Ask for gallery permissions on mount
+     const pickImageFromLibrary = async() => {
+        console.log("tapped profile photo!");
+        // if(!hasGalleryPermission){
+        //     console.log("no gallery permission");
+        //     return;
+        // }
+        const result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ['images'],
+            allowsEditing: true,
+            aspect: [1, 1],
+            quality: 0.7,
+          });
+          console.log("picker result ->", result);
+          if(result.canceled){
+            return;
+          }
+          const pickedUri = result.assets[0].uri;
+          setProfilePic(pickedUri);
+        };
 
   // Render function for each post item
   const renderPost = ({ item }) => {
@@ -76,8 +91,14 @@ const PersonalProfile = () => {
     <View style={styles.container}>
       {/* Profile Picture and Name */}
       <View style={styles.profileContainer}>
-        <TouchableOpacity onPress={pickImageFromLibrary}>
-          <Image source={{ uri: profilePic }} style={styles.profilePic} />
+        <TouchableOpacity 
+            onPress={pickImageFromLibrary}
+            style={styles.profilePic}
+        >
+            <Image 
+                source={{ uri: profilePic }} 
+                style = {styles.profilePic}
+            />
         </TouchableOpacity>
         <Text style={styles.accountName}>{userInfo.accountName}</Text>
       </View>
