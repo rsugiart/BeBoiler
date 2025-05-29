@@ -2,20 +2,17 @@ import React, { useState } from 'react';
 import {
   View,
   Text,
-  Image,
   StyleSheet,
   TouchableOpacity,
+  Image,
   FlatList,
+  Alert,
 } from 'react-native';
-import { launchImageLibrary } from 'react-native-image-picker';
+import * as ImagePicker from 'expo-image-picker';
 
 const PersonalProfile = () => {
-  // Store profile picture in state
-  const [profilePic, setProfilePic] = useState(
-    'https://example.com/default-profile.png'
-  );
+  const [profilePic, setProfilePic] = useState<string | null>(null);
 
-  // Sample user info (could come from an API, Context, Redux, etc.)
   const userInfo = {
     accountName: 'John Doe',
     totalPoints: 1200,
@@ -23,91 +20,70 @@ const PersonalProfile = () => {
     dailyStreak: 5,
   };
 
-  // Sample posts (could be fetched from an API)
   const userPosts = [
     { id: '1', title: 'BeBoilers', content: 'Winners' },
-    {
-      id: '2',
-      title: 'Cool squirrel',
-      content: 'noice',
-    },
-    {
-      id: '3',
-      title: 'train',
-      content: 'points',
-    },
+    { id: '2', title: 'Cool squirrel', content: 'noice' },
+    { id: '3', title: 'train', content: 'points' },
   ];
 
-  // Function to handle picking an image from the library
-  const pickImageFromLibrary = async () => {
-    // Options for the image picker
-    const options = {
-      mediaType: 'photo',
-      maxWidth: 1024,
-      maxHeight: 1024,
+  const pickImage = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== 'granted') {
+      Alert.alert('Permission Denied', 'Please enable photo library access in settings.');
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
       quality: 1,
-    };
-
-    // Launch image library
-    launchImageLibrary(options, (response) => {
-      if (response.didCancel) {
-        console.log('User canceled image picker');
-      } else if (response.errorCode) {
-        console.log('ImagePicker Error: ', response.errorMessage);
-      } else if (response.assets && response.assets.length > 0) {
-        // Get the selected image's URI
-        const selectedImage = response.assets[0].uri;
-        setProfilePic(selectedImage);
-      }
     });
+
+    if (!result.canceled) {
+      setProfilePic(result.assets[0].uri);
+    }
   };
 
-  // Render function for each post item
-  const renderPost = ({ item }) => {
-    return (
-      <View style={styles.postContainer}>
-        <Text style={styles.postTitle}>{item.title}</Text>
-        <Text style={styles.postContent}>{item.content}</Text>
-      </View>
-    );
-  };
+  const renderPost = ({ item }: { item: typeof userPosts[0] }) => (
+    <View style={styles.postContainer}>
+      <Text style={styles.postTitle}>{item.title}</Text>
+      <Text style={styles.postContent}>{item.content}</Text>
+    </View>
+  );
 
   return (
     <View style={styles.container}>
-      {/* Profile Picture and Name */}
       <View style={styles.profileContainer}>
-        <TouchableOpacity onPress={pickImageFromLibrary}>
-          <Image source={{ uri: profilePic }} style={styles.profilePic} />
+        <TouchableOpacity onPress={pickImage}>
+          <Image
+            source={
+              profilePic
+                ? { uri: profilePic }
+                : require('../../assets/images/avatar_ash.png')
+            }
+            style={styles.profilePic}
+          />
         </TouchableOpacity>
         <Text style={styles.accountName}>{userInfo.accountName}</Text>
       </View>
 
-      {/* Stats Section */}
       <View style={styles.statsContainer}>
         <View style={styles.statBox}>
           <Text style={styles.statLabel}>Total Points</Text>
           <Text style={styles.statValue}>{userInfo.totalPoints}</Text>
         </View>
-
         <View style={styles.statBox}>
           <Text style={styles.statLabel}>Events Attended</Text>
           <Text style={styles.statValue}>{userInfo.eventsAttended}</Text>
         </View>
-
         <View style={styles.statBox}>
           <Text style={styles.statLabel}>Daily Streak</Text>
           <Text style={styles.statValue}>{userInfo.dailyStreak}</Text>
         </View>
       </View>
 
-      {/* Posts Section */}
       <View style={styles.postsContainer}>
         <Text style={styles.postsHeader}>My Posts</Text>
-        <FlatList
-          data={userPosts}
-          renderItem={renderPost}
-          keyExtractor={(item) => item.id}
-        />
+        <FlatList data={userPosts} renderItem={renderPost} keyExtractor={(item) => item.id} />
       </View>
     </View>
   );
@@ -151,12 +127,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     alignItems: 'center',
     width: 100,
-    // iOS shadow
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 3,
-    // Android shadow
     elevation: 2,
   },
   statLabel: {
@@ -186,12 +160,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 15,
     marginVertical: 5,
-    // iOS shadow
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
     shadowRadius: 2,
-    // Android shadow
     elevation: 2,
   },
   postTitle: {
