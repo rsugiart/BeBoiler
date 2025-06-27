@@ -14,7 +14,7 @@ export default function LandingPage() {
   const router = useRouter();
 
   const handleEnterApp = () => {
-    router.replace('/feed'); // or any other screen like '/(tabs)/feed'
+    router.replace('/(tabs)/feed'); // or any other screen like '/(tabs)/feed'
   };
 
   return (
