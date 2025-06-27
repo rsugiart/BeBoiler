@@ -1,6 +1,9 @@
-//Tab Navigator (was BeBoiler.tsx)
-//app/(tabs)/_layout.tsx
+/*######################################################################################################
+Tab Navigator (was BeBoiler.tsx)
 
+NOTE path: app/(tabs)/_layout.tsx
+This sets up the bottom navigation tab.
+######################################################################################################*/
 import React from 'react';
 import { AntDesign } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';

@@ -1,7 +1,11 @@
-//landing page of our app 
-/*NOTE: There are TWO landing pages here. The current landing page here does NOT automatically enter the app, it
+/*######################################################################################################
+Landing page of our app 
+
+NOTE: There are TWO landing pages here. The current landing page here does NOT automatically enter the app, it
 requires the user to press a button to enter (Change to a login page later). The one commented out is just a loading 
-screen that automatically navigates to the rest of the app. */
+screen that automatically navigates to the rest of the app. 
+
+######################################################################################################*/
 
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
@@ -42,8 +46,12 @@ const styles = StyleSheet.create({
   },
 });
 
-/*NOTE: Code below is for a loading page that will just automatically enter app. Comment out everything
-above this line before uncommenting the code below. */
+/*######################################################################################################
+
+NOTE: Code below is for a loading page that will just automatically enter app. Comment out everything
+above this line before uncommenting the code below. 
+
+########################################################################################################*/
 
 
 // import { useEffect } from 'react';
