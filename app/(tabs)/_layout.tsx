@@ -1,5 +1,6 @@
 //Tab Navigator (was BeBoiler.tsx)
-// app/(tabs)/_layout.tsx
+//app/(tabs)/_layout.tsx
+
 import React from 'react';
 import { AntDesign } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
