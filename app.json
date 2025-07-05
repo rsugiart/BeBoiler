@@ -8,11 +8,12 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
+      "bundleIdentifier": "com.yourname.freshmapapp",
       "supportsTablet": true,
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "This app uses your location to show your position on the map.",
         "NSPhotoLibraryUsageDescription": "This app needs access to your photo library to update your profile picture."
-    }
+      }
     },
     "android": {
       "adaptiveIcon": {
