@@ -19,7 +19,6 @@ type TaskProps = {
 };
 
 const TaskItem = ({ task, onPress }: TaskProps) => {
-    const router = useRouter();
 
     return (
       <Pressable onPress={onPress}>

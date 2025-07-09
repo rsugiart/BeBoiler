@@ -1,4 +1,4 @@
-import type{Task} from '../models/Task';
+import type {Task} from '../models/Task';
 
 export const mockTaskData: Task[] = [
   { id: '1', title: 'Snipe the Boiler Express', points: 50, completed: false, location: "Engineering Fountain", type: 'daily' },
