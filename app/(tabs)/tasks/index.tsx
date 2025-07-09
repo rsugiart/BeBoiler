@@ -1,3 +1,9 @@
+/*######################################################################################################
+Task Navigator 
+
+NOTE path: app/(tabs)/tasks/index.tsx
+This sets up navigation to the individual task detail screens.
+######################################################################################################*/
 import React from 'react';
 import { View, Text, StyleSheet, FlatList, Pressable} from 'react-native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -21,12 +27,16 @@ const tasks: Task[] = [
   { id: '3', title: 'Grab a snack from the ReXCH event', points: 75, completed: false,location: "MSEE", type: 'special' },
   { id: '4', title: 'Walk under the bell tower', points: 100, completed: true, location: "Bell Tower",type: 'special' },
 ];
+type TaskProps = {
+  task: Task;
+  onPress: () => void;
+};
 
-const TaskItem = ({ task }: { task: Task }) => {
+const TaskItem = ({ task, onPress }: TaskProps) => {
     const router = useRouter();
-  
+
     return (
-      <Pressable onPress={() => router.push(`/task/details?id=${task.id}`)}>
+      <Pressable onPress={onPress}>
         <View style={[styles.taskItem, task.completed && styles.completed]}>
           <Text style={styles.taskTitle}>{task.title}</Text>
           <Text style={styles.taskPoints}>+{task.points} pts</Text>
@@ -40,7 +50,12 @@ export default function TaskScreen() {
     const daily = tasks.filter(t => t.type === 'daily' && !t.completed);
     const special = tasks.filter(t => t.type === 'special' && !t.completed);
     const completed = tasks.filter(t => t.completed);
+    const router = useRouter();
 
+    const onTaskPress = (taskId: string) => {
+      // Navigate to task details screen
+      router.push(`/tasks/${taskId}`);
+    };
     return (
         <View style={styles.container}>
         <Text style={styles.header}>Daily Tasks</Text>
