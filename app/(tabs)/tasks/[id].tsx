@@ -27,7 +27,7 @@ export default function TaskDetailsScreen() {
       // Simulate a delay
       await new Promise((resolve) => setTimeout(resolve, 500));
       const foundTask = mockTaskData.find((t) => t.id === id);
-      setTask(foundTask?? null);
+      setTask(foundTask ?? null);
       setLoading(false);
     };
 
