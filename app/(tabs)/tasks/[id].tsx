@@ -9,23 +9,9 @@ Update Later:
 import { useLocalSearchParams } from 'expo-router';
 import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
 import { useEffect, useState } from 'react';
-
-type Task = {
-    id: string;
-    title: string;
-    points: number;
-    completed: boolean;
-    type: 'daily' | 'special';
-  };
-  
-
-const tasks:  Task []=[
-  { id: '1', title: 'Snipe the Boiler Express', points: 50, completed: false, type: 'daily' },
-  { id: '2', title: 'Study at the Wilhment Active Center', points: 30, completed: true, type: 'daily' },
-  { id: '3', title: 'Grab a snack from the ReXCH event', points: 75, completed: false, type: 'special' },
-  { id: '4', title: 'Walk under the bell tower', points: 100, completed: true, type: 'special' },
-];
-
+import type {Task} from '../../../models/Task';
+import { mockTaskData } from '../../../data/mockTask'; 
+import { Button } from '@react-navigation/elements';
 
 export default function TaskDetailsScreen() {
   const params = useLocalSearchParams();
@@ -40,7 +26,7 @@ export default function TaskDetailsScreen() {
       setLoading(true);
       // Simulate a delay
       await new Promise((resolve) => setTimeout(resolve, 500));
-      const foundTask = tasks.find((t) => t.id === id);
+      const foundTask = mockTaskData.find((t) => t.id === id);
       setTask(foundTask?? null);
       setLoading(false);
     };
@@ -66,12 +52,14 @@ export default function TaskDetailsScreen() {
   }
 
   return (
+    
     <View style={styles.container}>
       <Text style={styles.title}>{task.title}</Text>
       <Text style={styles.detail}>Points: {task.points}</Text>
       <Text style={styles.detail}>
         Status: {task.completed ? 'Completed ✅' : 'Incomplete ❌'}
       </Text>
+      <Text style={styles.detail}>Location: {task.location}</Text>
     </View>
   );
 }

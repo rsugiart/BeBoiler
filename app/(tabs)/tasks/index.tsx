@@ -10,23 +10,9 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 // import { TaskStackParamList } from './_layout';
 // import { useNavigation } from 'expo-router';
 import { useRouter } from 'expo-router';
+import type { Task } from '../../../models/Task';
+import { mockTaskData } from '../../../data/mockTask';
 
-
-type Task = {
-  id: string;
-  title: string;
-  points: number;
-  completed: boolean;
-  location: string;
-  type: 'daily' | 'special';
-};
-
-const tasks: Task[] = [
-  { id: '1', title: 'Snipe the Boiler Express', points: 50, completed: false, location: "Engineering Fountain", type: 'daily' },
-  { id: '2', title: 'Study at the Wilhment Active Center', points: 30, completed: true,location: "WALC", type: 'daily' },
-  { id: '3', title: 'Grab a snack from the ReXCH event', points: 75, completed: false,location: "MSEE", type: 'special' },
-  { id: '4', title: 'Walk under the bell tower', points: 100, completed: true, location: "Bell Tower",type: 'special' },
-];
 type TaskProps = {
   task: Task;
   onPress: () => void;
@@ -47,9 +33,9 @@ const TaskItem = ({ task, onPress }: TaskProps) => {
 
 export default function TaskScreen() {
   
-    const daily = tasks.filter(t => t.type === 'daily' && !t.completed);
-    const special = tasks.filter(t => t.type === 'special' && !t.completed);
-    const completed = tasks.filter(t => t.completed);
+    const daily = mockTaskData.filter(t => t.type === 'daily' && !t.completed);
+    const special = mockTaskData.filter(t => t.type === 'special' && !t.completed);
+    const completed = mockTaskData.filter(t => t.completed);
     const router = useRouter();
 
     const onTaskPress = (taskId: string) => {
