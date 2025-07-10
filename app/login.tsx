@@ -60,7 +60,7 @@ export default function Login() {
 
       <View style={styles.footer}>
         <Text style={styles.footerText}>Don't have an account?</Text>
-        <Link href="/sign-up" asChild>
+        <Link href="/signup" asChild>
           <Pressable>
             <Text style={styles.signUpText}> Sign Up</Text>
           </Pressable>

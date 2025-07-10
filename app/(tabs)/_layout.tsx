@@ -1,11 +1,11 @@
-// // /*######################################################################################################
-// // Tab Navigator (was BeBoiler.tsx)
+/*######################################################################################################
+Tab Navigator (was BeBoiler.tsx)
 
-// // NOTE path: app/(tabs)/_layout.tsx
-// // This sets up the bottom navigation tab.
-// // ######################################################################################################*/
+NOTE path: app/(tabs)/_layout.tsx
+This sets up the bottom navigation tab.
+######################################################################################################*/
 
-// // app/(tabs)/_layout.tsx
+// app/(tabs)/_layout.tsx
 // import { auth } from '@/lib/firebase-config';
 // import { Slot, useRouter, useSegments } from 'expo-router';
 // import { onAuthStateChanged } from 'firebase/auth';
