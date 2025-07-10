@@ -29,6 +29,7 @@ const PersonalProfile = () => {
     { id: '3', title: 'train', content: 'points' },
   ];
 
+  // Function to handle user logout: no need to reroute to login screen manually (firebase already takes care of this)
   const handleLogout = async () => {
     const auth = getAuth();
     try{
