@@ -4,11 +4,13 @@ Tab Navigator (was BeBoiler.tsx)
 NOTE path: app/(tabs)/_layout.tsx
 This sets up the bottom navigation tab.
 ######################################################################################################*/
-import React from 'react';
+
+// Removed large block of commented-out legacy code for improved readability and maintainability.
+// app/(tabs)/_layout.tsx
 import { AntDesign } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
+import React from 'react';
 
-//Had to manually specify order of all the tabs
 export default function AppTabs() {
   return (
     <Tabs>
@@ -51,3 +53,4 @@ export default function AppTabs() {
     </Tabs>
   );
 }
+

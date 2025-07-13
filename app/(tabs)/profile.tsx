@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import {
   View,
   Text,
+  Button,
   StyleSheet,
   TouchableOpacity,
   Image,
@@ -9,6 +10,8 @@ import {
   Alert,
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
+import { getAuth, signOut } from 'firebase/auth';
+import { getActionFromState } from '@react-navigation/native';
 
 const PersonalProfile = () => {
   const [profilePic, setProfilePic] = useState<string | null>(null);
@@ -26,13 +29,24 @@ const PersonalProfile = () => {
     { id: '3', title: 'train', content: 'points' },
   ];
 
+  // Function to handle user logout: no need to reroute to login screen manually (firebase already takes care of this)
+  const handleLogout = async () => {
+    const auth = getAuth();
+    try{
+      await signOut(auth);
+      Alert.alert('Logged out successfully');
+    } catch (error) {
+      console.error('Logout failed:', error);
+      Alert.alert('Logout failed', 'Please try again later.');
+    }
+  };
+
   const pickImage = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== 'granted') {
       Alert.alert('Permission Denied', 'Please enable photo library access in settings.');
       return;
     }
-
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       quality: 1,
@@ -64,6 +78,11 @@ const PersonalProfile = () => {
           />
         </TouchableOpacity>
         <Text style={styles.accountName}>{userInfo.accountName}</Text>
+      </View>
+
+       <View style={styles.logOutContainer}>
+      <Text style={styles.title}>Profile</Text>
+      <Button title="Sign Out" onPress={handleLogout} />
       </View>
 
       <View style={styles.statsContainer}>
@@ -114,6 +133,16 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     color: '#333',
+  },
+  logOutContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  title:{
+    fontSize: 24,
+    marginBottom: 20,
   },
   statsContainer: {
     flexDirection: 'row',
