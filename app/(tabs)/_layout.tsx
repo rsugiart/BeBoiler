@@ -22,7 +22,7 @@ export default function AppTabs() {
         }}
       />
       <Tabs.Screen
-        name="task"
+        name="tasks"
         options={{
           title: 'Tasks',
           tabBarIcon: ({ color, size }) => (
