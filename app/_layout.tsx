@@ -1,9 +1,4 @@
 //Top Level Layout
-// import { Stack } from "expo-router";
-
-// export default function RootLayout() {
-//   return <Stack />;
-// }
 // app/_layout.tsx
 import { Slot, useRouter, useSegments } from 'expo-router';
 import { auth } from '@/lib/firebase-config';
