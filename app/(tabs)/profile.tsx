@@ -1,23 +1,31 @@
-import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  Button,
-  StyleSheet,
-  TouchableOpacity,
-  Image,
-  FlatList,
-  Alert,
-} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import { getAuth, signOut } from 'firebase/auth';
-import { getActionFromState } from '@react-navigation/native';
+import { getAuth, signOut, updateProfile, User } from 'firebase/auth';
+import React, { useEffect, useState } from 'react';
+import {
+  Alert,
+  Button,
+  FlatList,
+  Image,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 
 const PersonalProfile = () => {
   const [profilePic, setProfilePic] = useState<string | null>(null);
+  const [user, setUser] = useState<User | null>(null);
 
-  const userInfo = {
-    accountName: 'John Doe',
+  const [editMode, setEditMode] = useState(false);
+  const [newName, setNewName] = useState(user?.displayName || '');
+  const auth = getAuth();
+
+  useEffect(() => {
+    setUser(auth.currentUser);
+  }, []);
+
+  const stats = {
     totalPoints: 1200,
     eventsAttended: 8,
     dailyStreak: 5,
@@ -28,11 +36,22 @@ const PersonalProfile = () => {
     { id: '2', title: 'Cool squirrel', content: 'noice' },
     { id: '3', title: 'train', content: 'points' },
   ];
+    const handleSaveName = async () => {
+      if (!user || !newName.trim()) return;
 
-  // Function to handle user logout: no need to reroute to login screen manually (firebase already takes care of this)
+      try {
+        await updateProfile(user, { displayName: newName.trim() });
+        setEditMode(false);
+        Alert.alert('Success', 'Name updated!');
+      } catch (err) {
+        console.error(err);
+        Alert.alert('Update failed', 'Please try again.');
+      }
+    };
+
+
   const handleLogout = async () => {
-    const auth = getAuth();
-    try{
+    try {
       await signOut(auth);
       Alert.alert('Logged out successfully');
     } catch (error) {
@@ -47,6 +66,7 @@ const PersonalProfile = () => {
       Alert.alert('Permission Denied', 'Please enable photo library access in settings.');
       return;
     }
+
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       quality: 1,
@@ -72,39 +92,65 @@ const PersonalProfile = () => {
             source={
               profilePic
                 ? { uri: profilePic }
+                : user?.photoURL
+                ? { uri: user.photoURL }
                 : require('../../assets/images/avatar_ash.png')
             }
             style={styles.profilePic}
           />
         </TouchableOpacity>
-        <Text style={styles.accountName}>{userInfo.accountName}</Text>
-      </View>
 
-       <View style={styles.logOutContainer}>
-      <Text style={styles.title}>Profile</Text>
-      <Button title="Sign Out" onPress={handleLogout} />
-      </View>
+        {editMode ? (
+          <>
+            <TextInput
+              value={newName}
+              onChangeText={setNewName}
+              style={styles.input}
+              placeholder="Enter new display name"
+            />
+            
+            <View style={styles.buttonRow}>
+              <Button title="Save" onPress={handleSaveName} />
+              <Button title="Cancel" onPress={() => setEditMode(false)} />
+            </View>
+          </>
+        ) : (
+          <>
+            <Text style={styles.accountName}>{user?.displayName || 'Anonymous User'}</Text>
+            <Text style={styles.userEmail}>{user?.email}</Text>
+            <TouchableOpacity onPress={() => setEditMode(true)}>
+              <Text style={styles.editLink}>Edit Name</Text>
+            </TouchableOpacity>
+          </>
+        )}
+</View>
 
-      <View style={styles.statsContainer}>
-        <View style={styles.statBox}>
-          <Text style={styles.statLabel}>Total Points</Text>
-          <Text style={styles.statValue}>{userInfo.totalPoints}</Text>
+        <View style={styles.logOutContainer}>
+          <Text style={styles.title}>Profile</Text>
+          <Button title="Sign Out" onPress={handleLogout} />
         </View>
-        <View style={styles.statBox}>
-          <Text style={styles.statLabel}>Events Attended</Text>
-          <Text style={styles.statValue}>{userInfo.eventsAttended}</Text>
-        </View>
-        <View style={styles.statBox}>
-          <Text style={styles.statLabel}>Daily Streak</Text>
-          <Text style={styles.statValue}>{userInfo.dailyStreak}</Text>
-        </View>
-      </View>
 
-      <View style={styles.postsContainer}>
-        <Text style={styles.postsHeader}>My Posts</Text>
-        <FlatList data={userPosts} renderItem={renderPost} keyExtractor={(item) => item.id} />
+        <View style={styles.statsContainer}>
+          <View style={styles.statBox}>
+            <Text style={styles.statLabel}>Total Points</Text>
+            <Text style={styles.statValue}>{stats.totalPoints}</Text>
+          </View>
+          <View style={styles.statBox}>
+            <Text style={styles.statLabel}>Events Attended</Text>
+            <Text style={styles.statValue}>{stats.eventsAttended}</Text>
+          </View>
+          <View style={styles.statBox}>
+            <Text style={styles.statLabel}>Daily Streak</Text>
+            <Text style={styles.statValue}>{stats.dailyStreak}</Text>
+          </View>
+        </View>
+
+        <View style={styles.postsContainer}>
+          <Text style={styles.postsHeader}>My Posts</Text>
+          <FlatList data={userPosts} renderItem={renderPost} keyExtractor={(item) => item.id} />
+        </View>
       </View>
-    </View>
+    
   );
 };
 
@@ -117,8 +163,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 50,
   },
-  profileContainer: {
+    profileContainer: {
     alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'column', 
     marginBottom: 30,
   },
   profilePic: {
@@ -205,4 +253,38 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#555',
   },
+  input: {
+  width: '80%',         
+  maxWidth: 300,
+  textAlign: 'center',
+  borderColor: '#ccc',
+  borderWidth: 1,
+  borderRadius: 8,
+  padding: 10,
+  marginVertical: 10,
+},
+nameContainer: {
+  alignItems: 'center',
+  justifyContent: 'center',
+},
+
+editLink: {
+  color: '#007AFF',
+  marginTop: 4,
+  fontSize: 14,
+},
+buttonRow: {
+  flexDirection: 'row',
+  justifyContent: 'center',
+  alignItems: 'center',
+  gap: 10,
+  marginTop: 8,
+},
+userEmail: {
+  fontSize: 14,
+  color: '#777',
+  marginTop: 4,
+  textAlign: 'center',
+},
+
 });
