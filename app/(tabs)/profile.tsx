@@ -122,8 +122,7 @@ const PersonalProfile = () => {
               <Text style={styles.editLink}>Edit Name</Text>
             </TouchableOpacity>
           </>
-          
-    )}
+        )}
 </View>
 
         <View style={styles.logOutContainer}>
