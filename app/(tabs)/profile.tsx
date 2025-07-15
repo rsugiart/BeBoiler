@@ -36,18 +36,18 @@ const PersonalProfile = () => {
     { id: '2', title: 'Cool squirrel', content: 'noice' },
     { id: '3', title: 'train', content: 'points' },
   ];
-  const handleSaveName = async () => {
-  if (!user || !newName.trim()) return;
+    const handleSaveName = async () => {
+      if (!user || !newName.trim()) return;
 
-  try {
-    await updateProfile(user, { displayName: newName.trim() });
-    setEditMode(false);
-    Alert.alert('Success', 'Name updated!');
-  } catch (err) {
-    console.error(err);
-    Alert.alert('Update failed', 'Please try again.');
-  }
-};
+      try {
+        await updateProfile(user, { displayName: newName.trim() });
+        setEditMode(false);
+        Alert.alert('Success', 'Name updated!');
+      } catch (err) {
+        console.error(err);
+        Alert.alert('Update failed', 'Please try again.');
+      }
+    };
 
 
   const handleLogout = async () => {
